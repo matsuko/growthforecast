@@ -1,0 +1,11 @@
+start on startup
+stop on runlevel [016]
+
+respawn
+
+exec su -c "
+  MYSQL_USER=<%= node['growthforecast']['database']['user_name'] %> \
+  MYSQL_PASSWORD=<%= node['growthforecast']['database']['password'] %> \
+  exec /opt/perlbrew/perls/<%= node['growthforecast']['system']['perlbrew_ver'] %>/bin/growthforecast.pl --data-dir <%= node['growthforecast']['system']['data_dir'] %> \
+  --front-proxy <%= node['growthforecast']['system']['front-proxy'] %> \
+  --with-mysql dbi:mysql:<%= node['growthforecast']['database']['db_name'] %>;hostname=<%= node['growthforecast']['database']['host'] %>"
