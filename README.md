@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/aiming-cookbooks/growthforecast.png?branch=master)](https://travis-ci.org/aiming-cookbooks/growthforecast)
+
 GrowthForecast Cookbook
 =======================
 
