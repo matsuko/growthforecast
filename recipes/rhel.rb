@@ -20,13 +20,14 @@ execute "Setup mysql database" do
   user  "root"
   group "root"
 
+  db_host = node['growthforecast']['database']['host']
   root_db_pass = node['mysql']['server_root_password']
 
   command <<-EOF
-    mysqladmin -h localhost -u root -p#{root_db_pass} create growthforecast;
+    mysqladmin -h #{db_host} -u root -p#{root_db_pass} create growthforecast;
   EOF
 
-  not_if "mysql -h localhost -u root -p#{root_db_pass} growthforecast -e ''"
+  not_if "mysql -h #{db_host} -u root -p#{root_db_pass} growthforecast -e ''"
 end
 
 # Create growthforecast user to mysql.
@@ -34,11 +35,12 @@ execute "Create growthforecast user to mysql" do
   root_db_pass = node['mysql']['server_root_password']
   db_user = node['growthforecast']['database']['user_name']
   db_pass = node['growthforecast']['database']['password']
+  db_host = node['growthforecast']['database']['host']
 
   command <<-EOF
-    mysql -u root -p#{root_db_pass} -e \
+    mysql -h #{db_host} -u root -p#{root_db_pass} -e \
       "GRANT CREATE, ALTER, DELETE, INSERT, UPDATE, SELECT ON \ 
-         growthforecast.* TO '#{db_user}'@'localhost' IDENTIFIED BY '#{db_pass}'"
+         growthforecast.* TO '#{db_user}'@'#{node['hostname']}' IDENTIFIED BY '#{db_pass}'"
   EOF
 
   not_if "mysql -u #{db_user} -p#{db_pass} growthforecast -e"
